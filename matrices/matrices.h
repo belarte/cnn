@@ -13,6 +13,10 @@ public:
 		m_data{data}
 	{}
 
+	bool operator==(const Matrix<Columns, Rows, Type>& other) const {
+		return m_data == other.m_data;
+	}
+
 	std::string to_string() const {
 		std::ostringstream oss;
 
@@ -37,4 +41,10 @@ std::ostream& operator<<(std::ostream& os, const Matrix<C, R, T>& m)
 {
    os << m.to_string();
    return os;
+}
+
+template<size_t C, size_t R, typename T>
+bool operator!=(const Matrix<C, R, T>& left, const Matrix<C, R, T>& right)
+{
+	return ! (left == right);
 }
