@@ -3,7 +3,9 @@
 #include <iostream>
 #include <sstream>
 
-template<size_t Columns, size_t Rows, typename Type = int>
+template<size_t Columns, size_t Rows, typename Type = int,
+	typename std::enable_if_t<(Columns > 0), size_t> = 0,
+	typename std::enable_if_t<(Rows > 0), size_t> = 0>
 class Matrix
 {
 public:
