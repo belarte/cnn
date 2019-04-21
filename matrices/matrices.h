@@ -2,14 +2,14 @@
 #include <iostream>
 #include <sstream>
 
-template<size_t Columns, size_t Rows>
+template<size_t Columns, size_t Rows, typename Type = int>
 class Matrix
 {
 public:
 	Matrix() : m_data {0} {
 	}
 
-	Matrix(const std::array<std::array<int, Columns>, Rows>& data) :
+	Matrix(const std::array<std::array<Type, Columns>, Rows>& data) :
 		m_data{data}
 	{}
 
@@ -28,12 +28,12 @@ public:
 	}
 
 private:
-	std::array<std::array<int, Columns>, Rows> m_data;
+	std::array<std::array<Type, Columns>, Rows> m_data;
 };
 
 
-template<size_t Columns, size_t Rows>
-std::ostream& operator<<(std::ostream& os, const Matrix<Columns, Rows>& m)
+template<size_t C, size_t R, typename T>
+std::ostream& operator<<(std::ostream& os, const Matrix<C, R, T>& m)
 {
    os << m.to_string();
    return os;
