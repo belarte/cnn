@@ -9,6 +9,15 @@
 		} \
    } while(0)
 
+#define ASSERT_EQ(left, right) \
+   do { \
+      if (left != right) { \
+         std::cerr << "Error in file " << __FILE__ << ":" << __LINE__; \
+			std::cerr << " in function " << __func__ << "() => " << #left << " != " << #right; \
+			std::cerr << "\nwith " << #left << " =\n" << left; \
+			std::cerr << "and " << #right << " =\n" << right; \
+		} \
+   } while(0)
 
 void comparison()
 {
@@ -42,10 +51,22 @@ void addition()
 	ASSERT(m2 + m4 + m1 == m3 + m4);
 }
 
+void multiplication()
+{
+	Matrix<2, 3> m1{ {{ {1, 2}, {3, 4}, {5, 6} }} };
+	Matrix<3, 2> m2{ {{ {1, 2, 3}, {4, 5, 6} }} };
+	Matrix<3, 3> m3{ {{ {9, 12, 15}, {19, 26, 33}, {29, 40, 51} }} };
+	Matrix<2, 2> m4{ {{ {22, 28}, {49, 64} }} };
+
+	ASSERT_EQ(m1 * m2, m3);
+	ASSERT_EQ(m2 * m1, m4);
+}
+
 int main(int, char**)
 {
 	comparison();
 	addition();
+	multiplication();
 
 	std::cerr << "Done testing!" << std::endl;
 	return 0;
