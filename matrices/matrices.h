@@ -18,6 +18,15 @@ public:
 		return m_data == other.m_data;
 	}
 
+	constexpr Matrix<Columns, Rows, Type>& operator+=(const Matrix<Columns, Rows, Type>& other) {
+		for (size_t j=0; j<Rows; ++j) {
+			for (size_t i=0; i<Columns; ++i) {
+				m_data[j][i] += other.m_data[j][i];
+			}
+		}
+		return *this;
+	}
+
 	constexpr std::string to_string() const {
 		std::ostringstream oss;
 
@@ -48,4 +57,10 @@ template<size_t C, size_t R, typename T>
 constexpr bool operator!=(const Matrix<C, R, T>& left, const Matrix<C, R, T>& right)
 {
 	return ! (left == right);
+}
+
+template<size_t C, size_t R, typename T>
+constexpr Matrix<C, R, T> operator+(Matrix<C, R, T> left, const Matrix<C, R, T>& right)
+{
+	return left += right;
 }
