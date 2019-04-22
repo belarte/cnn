@@ -62,11 +62,23 @@ void multiplication()
 	ASSERT_EQ(m2 * m1, m4);
 }
 
+void scalar_multiplication()
+{
+	Matrix<2, 3> m1;
+	Matrix<2, 3> m2{ {{ {1, 2}, {2, 3}, {3, 4} }} };
+	Matrix<2, 3> m3{ {{ {2, 4}, {4, 6}, {6, 8} }} };
+
+	ASSERT_EQ(3 * m1, m1);
+	ASSERT_EQ(2 * m2, m3);
+	ASSERT_EQ(2u * m2, m3);
+}
+
 int main(int, char**)
 {
 	comparison();
 	addition();
 	multiplication();
+	scalar_multiplication();
 
 	std::cerr << "Done testing!" << std::endl;
 	return 0;
