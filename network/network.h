@@ -1,3 +1,5 @@
+#pragma once
+
 #include "matrices/matrices.h"
 
 #include <array>
