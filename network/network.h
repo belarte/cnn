@@ -38,7 +38,7 @@ public:
 	constexpr void forward(Input in)
 	{
 		std::get<0>(m_neuronLayers) = in;
-		std::get<1>(m_neuronLayers) = std::get<0>(m_weightLayers) * std::get<0>(m_neuronLayers);
+		forward(std::make_index_sequence<std::tuple_size<WeightLayers>::value>{});
 	}
 
 	constexpr const Output& output() const
@@ -47,6 +47,11 @@ public:
 	}
 
 private:
+	template<size_t... Is>
+	void forward(std::index_sequence<Is...>) {
+		((std::get<Is+1>(m_neuronLayers) = std::get<Is>(m_weightLayers) * std::get<Is>(m_neuronLayers)), ...);
+	}
+
 	NeuronLayers m_neuronLayers;
 	WeightLayers m_weightLayers;
 };
