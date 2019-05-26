@@ -27,6 +27,11 @@ public:
 	{
 	}
 
+	constexpr Network(WeightLayers&& l)
+		: m_weightLayers{l}
+	{
+	}
+
 private:
 	NeuronLayers m_neuronLayers;
 	WeightLayers m_weightLayers;
