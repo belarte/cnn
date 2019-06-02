@@ -35,6 +35,24 @@ void addition()
 	ASSERT(m2 + m4 + m1 == m3 + m4);
 }
 
+void substraction()
+{
+	Matrix<2, 3> m1;
+	Matrix<2, 3> m2{ {{ {1, 2}, {2, 3}, {3, 4} }} };
+	Matrix<2, 3> m3{ {{ {1, 2}, {2, 3}, {3, 4} }} };
+	Matrix<2, 3> m4{ {{ {1, 2}, {2, 1}, {2, 2} }} };
+
+	Matrix<2, 3> m5{ {{ {0, 0}, {0, 2}, {1, 2} }} };
+	Matrix<2, 3> m6{ {{ {0, 0}, {0, -2}, {-1, -2} }} };
+
+	ASSERT(m2 - m1 == m2);
+	ASSERT(m2 - m3 == m1);
+	ASSERT(m2 - m4 == m5);
+	ASSERT(m4 - m3 == m6);
+	ASSERT(m2 - m4 == m3 - m4);
+	ASSERT(m2 - m4 - m1 == m3 - m4);
+}
+
 void multiplication()
 {
 	Matrix<2, 3> m1{ {{ {1, 2}, {3, 4}, {5, 6} }} };
