@@ -6,7 +6,7 @@ matrix:
 network:
 	g++ -I. -std=c++17 network/test.cpp -o network/test
 
-test:
+test: matrix network
 	./matrices/test
 	./network/test
 
