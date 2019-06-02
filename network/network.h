@@ -4,6 +4,8 @@
 
 #include <tuple>
 
+namespace {
+
 template<size_t A, size_t B, size_t... Args>
 struct Weights
 {
@@ -16,6 +18,8 @@ struct Weights<A, B>
 	using type = std::tuple<Matrix<A, B, double>>;
 };
 
+} // namespace
+
 template<size_t... Args>
 class Network
 {
@@ -24,7 +28,6 @@ public:
 	using WeightLayers = typename Weights<Args...>::type;
 	using Input = typename std::tuple_element<0, NeuronLayers>::type;
 	using Output = typename std::tuple_element<std::tuple_size<NeuronLayers>::value - 1, NeuronLayers>::type;
-	using Indices = std::make_index_sequence<std::tuple_size<NeuronLayers>::value>;
 
 	constexpr Network()
 	{
@@ -49,7 +52,13 @@ public:
 private:
 	template<size_t... Is>
 	void forward(std::index_sequence<Is...>) {
-		((std::get<Is+1>(m_neuronLayers) = std::get<Is>(m_weightLayers) * std::get<Is>(m_neuronLayers)), ...);
+		(forwardLayer<Is>(), ...);
+	}
+
+	template<size_t I>
+	void forwardLayer() {
+		std::get<I+1>(m_neuronLayers) = std::get<I>(m_weightLayers) * std::get<I>(m_neuronLayers);
+		std::get<I+1>(m_neuronLayers).apply([](double x) {return x;});
 	}
 
 	NeuronLayers m_neuronLayers;

@@ -45,6 +45,16 @@ public:
 		return oss.str();
 	}
 
+	template<typename Fun>
+	constexpr void apply(Fun&& f)
+	{
+		for (size_t j=0; j<Rows; ++j) {
+			for (size_t i=0; i<Columns; ++i) {
+				m_data[j][i] = f(m_data[j][i]);
+			}
+		}
+	}
+
 private:
 	template<size_t C, size_t R, typename T1, typename T2>
 	friend constexpr auto operator*(T2 value, const Matrix<C, R, T1>& right);
@@ -54,7 +64,6 @@ private:
 
 	std::array<std::array<Type, Columns>, Rows> m_data;
 };
-
 
 template<size_t C, size_t R, typename T>
 constexpr std::ostream& operator<<(std::ostream& os, const Matrix<C, R, T>& m)
