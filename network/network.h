@@ -56,6 +56,13 @@ public:
 		return std::get<std::tuple_size<NeuronLayers>::value - 1>(m_neuronLayers);
 	}
 
+	constexpr const Output error(Output expected) const
+	{
+		Output result = output() - expected;
+		result.apply([](double x){ return x * x / 2; });
+		return result;
+	}
+
 private:
 	template<size_t... Is>
 	void forward(std::index_sequence<Is...>) {
