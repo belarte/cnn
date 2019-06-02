@@ -20,7 +20,14 @@ struct Weights<A, B>
 
 } // namespace
 
-template<size_t... Args>
+struct Identity
+{
+	static constexpr double f(double x) {
+		return x;
+	}
+};
+
+template<typename Activation, size_t... Args>
 class Network
 {
 public:
@@ -58,7 +65,7 @@ private:
 	template<size_t I>
 	void forwardLayer() {
 		std::get<I+1>(m_neuronLayers) = std::get<I>(m_weightLayers) * std::get<I>(m_neuronLayers);
-		std::get<I+1>(m_neuronLayers).apply([](double x) {return x;});
+		std::get<I+1>(m_neuronLayers).apply(&Activation::f);
 	}
 
 	NeuronLayers m_neuronLayers;
