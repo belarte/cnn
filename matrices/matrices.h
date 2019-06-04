@@ -40,6 +40,17 @@ public:
 		return *this;
 	}
 
+	constexpr auto transpose() const
+	{
+		std::array<std::array<Type, Rows>, Columns> result{0};
+		for (size_t j=0; j<Rows; ++j) {
+			for (size_t i=0; i<Columns; ++i) {
+				result[i][j] = m_data[j][i];
+			}
+		}
+		return Matrix<Rows, Columns, Type>{result};
+	}
+
 	constexpr std::string to_string() const {
 		std::ostringstream oss;
 
