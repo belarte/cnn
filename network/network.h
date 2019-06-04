@@ -51,9 +51,15 @@ public:
 		forward(std::make_index_sequence<std::tuple_size<WeightLayers>::value>{});
 	}
 
+	constexpr void backpropagate(Output output)
+	{
+		std::get<IndexOfLastLayer>(m_errorLayers) = output - std::get<IndexOfLastLayer>(m_neuronLayers);
+		backpropagate(std::make_index_sequence<std::tuple_size<WeightLayers>::value>{});
+	}
+
 	constexpr const Output& output() const
 	{
-		return std::get<std::tuple_size<NeuronLayers>::value - 1>(m_neuronLayers);
+		return std::get<IndexOfLastLayer>(m_neuronLayers);
 	}
 
 	constexpr const Output error(Output expected) const
@@ -65,16 +71,32 @@ public:
 
 private:
 	template<size_t... Is>
-	void forward(std::index_sequence<Is...>) {
+	void forward(std::index_sequence<Is...>)
+	{
 		(forwardLayer<Is>(), ...);
 	}
 
 	template<size_t I>
-	void forwardLayer() {
+	void forwardLayer()
+	{
 		std::get<I+1>(m_neuronLayers) = std::get<I>(m_weightLayers) * std::get<I>(m_neuronLayers);
 		std::get<I+1>(m_neuronLayers).apply(&Activation::f);
 	}
 
+	template<size_t... Is>
+	void backpropagate(std::index_sequence<Is...>)
+	{
+		(backpropagateLayer<IndexOfLastLayer - Is>(), ...);
+	}
+
+	template<size_t I>
+	void backpropagateLayer()
+	{
+	}
+
+	constexpr static size_t IndexOfLastLayer = std::tuple_size<NeuronLayers>::value - 1;
+
 	NeuronLayers m_neuronLayers;
+	NeuronLayers m_errorLayers;
 	WeightLayers m_weightLayers;
 };
