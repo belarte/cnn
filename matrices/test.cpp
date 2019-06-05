@@ -94,6 +94,15 @@ void multiplication_of_transpose()
 	ASSERT_EQ(m2.transpose() * m1.transpose(), m3.transpose());
 }
 
+void multiply()
+{
+	Matrix<3, 2> m1{ {{ {1, 2, 3}, {4, 5, 6} }} };
+	Matrix<3, 2> m2{ {{ {2, 3, 4}, {5, 6, 7} }} };
+	Matrix<3, 2> m3{ {{ {2, 6, 12}, {20, 30, 42} }} };
+
+	ASSERT_EQ(multiply(m1, m2), m3);
+}
+
 int main(int, char**)
 {
 	std::cout << "Start testing..." << std::endl;
@@ -105,6 +114,7 @@ int main(int, char**)
 	scalar_multiplication();
 	transpose();
 	multiplication_of_transpose();
+	multiply();
 
 	std::cout << "Done!" << std::endl;
 	return 0;

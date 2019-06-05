@@ -53,6 +53,22 @@ void error_is_positive_when_output_differs_from_expected()
 	ASSERT_EQ(n.error(expected), error);
 }
 
+void backpropagation_corrects_weights()
+{
+	Matrix<3, 4, double> l1{ {{ {1, 2, 1}, {3, 1, 4}, {1, 5, 1}, {6, 1, 7} }} };
+	Matrix<4, 2, double> l2{ {{ {0, 1, 2, 0}, {1, 2, 0, 1} }} };
+	auto n = Network<Identity, 3, 4, 2>{ std::make_tuple(l1, l2) };
+
+	Matrix<1, 3, double> intput{ {{ {1}, {0}, {1} }} };
+	Matrix<1, 2, double> trainingOutput{ {{ {0}, {30} }} };
+	Matrix<1, 2, double> expectedOutput{ {{ {-779}, {80} }} };
+
+	n.forward(intput);
+	n.backpropagate(trainingOutput);
+	n.forward(intput);
+	ASSERT_EQ(n.output(), expectedOutput);
+}
+
 int main(int, char**)
 {
 	std::cout << "Start testing..." << std::endl;
@@ -61,6 +77,7 @@ int main(int, char**)
 	forward_two_hidden_layers();
 	error_is_null_when_output_equals_expected();
 	error_is_positive_when_output_differs_from_expected();
+	backpropagation_corrects_weights();
 
 	std::cout << "Done!" << std::endl;
 	return 0;

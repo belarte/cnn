@@ -82,6 +82,10 @@ private:
 	template<size_t D1, size_t D2, size_t D3, typename T>
 	friend constexpr auto operator*(Matrix<D1, D2, T> left, const Matrix<D3, D1, T>& right);
 
+	// similar to numpy multiply
+	template<size_t C, size_t R, typename T>
+	friend constexpr auto multiply(const Matrix<C, R, T> &left, const Matrix<C, R, T> &righ);
+
 	std::array<std::array<Type, Columns>, Rows> m_data;
 };
 
@@ -131,6 +135,18 @@ constexpr auto operator*(T2 value, const Matrix<C, R, T1>& right)
 	for (size_t j=0; j<R; ++j) {
 		for (size_t i=0; i<C; ++i) {
 			result.m_data[j][i] = value * right.m_data[j][i];
+		}
+	}
+	return result;
+}
+
+template<size_t C, size_t R, typename T>
+constexpr auto multiply(const Matrix<C, R, T> &left, const Matrix<C, R, T> &right)
+{
+	Matrix<C, R, T> result;
+	for (size_t j=0; j<R; ++j) {
+		for (size_t i=0; i<C; ++i) {
+			result.m_data[j][i] = left.m_data[j][i] * right.m_data[j][i];
 		}
 	}
 	return result;

@@ -25,6 +25,10 @@ struct Identity
 	static constexpr double f(double x) {
 		return x;
 	}
+
+	static constexpr double fp(double x) {
+		return 1;
+	}
 };
 
 template<typename Activation, size_t... Args>
@@ -79,24 +83,33 @@ private:
 	template<size_t I>
 	void forwardLayer()
 	{
-		std::get<I+1>(m_neuronLayers) = std::get<I>(m_weightLayers) * std::get<I>(m_neuronLayers);
+		std::get<I+1>(m_aggregatedLayers) = std::get<I>(m_weightLayers) * std::get<I>(m_neuronLayers);
+		std::get<I+1>(m_neuronLayers) = std::get<I+1>(m_aggregatedLayers);
 		std::get<I+1>(m_neuronLayers).apply(&Activation::f);
 	}
 
 	template<size_t... Is>
 	void backpropagate(std::index_sequence<Is...>)
 	{
-		(backpropagateLayer<IndexOfLastLayer - Is>(), ...);
+		(backpropagateLayer<std::tuple_size<WeightLayers>::value - Is - 1>(), ...);
 	}
 
 	template<size_t I>
 	void backpropagateLayer()
 	{
+		std::get<I + 1>(m_aggregatedLayers).apply(&Activation::fp);
+		auto error = multiply(std::get<I + 1>(m_errorLayers), std::get<I + 1>(m_aggregatedLayers));
+		auto delta = LearningRate * error * std::get<I>(m_neuronLayers).transpose();
+
+		std::get<I>(m_errorLayers) = std::get<I>(m_weightLayers).transpose() * error;
+		std::get<I>(m_weightLayers) += delta;
 	}
 
 	constexpr static size_t IndexOfLastLayer = std::tuple_size<NeuronLayers>::value - 1;
+	constexpr static double LearningRate = 0.5;
 
 	NeuronLayers m_neuronLayers;
+	NeuronLayers m_aggregatedLayers;
 	NeuronLayers m_errorLayers;
 	WeightLayers m_weightLayers;
 };
