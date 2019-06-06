@@ -9,13 +9,13 @@ namespace {
 template<size_t A, size_t B, size_t... Args>
 struct Weights
 {
-	using type = decltype(std::tuple_cat(std::tuple<Matrix<A, B, double>>{}, typename Weights<B, Args...>::type{}));
+	using type = decltype(std::tuple_cat(std::tuple<Matrix<B, A, double>>{}, typename Weights<B, Args...>::type{}));
 };
 
 template<size_t A, size_t B>
 struct Weights<A, B>
 {
-	using type = std::tuple<Matrix<A, B, double>>;
+	using type = std::tuple<Matrix<B, A, double>>;
 };
 
 } // namespace
@@ -34,7 +34,7 @@ struct Identity
 template<size_t... Args>
 struct Topology
 {
-	using NeuronLayers = std::tuple<Matrix<1, Args, double>...>;
+	using NeuronLayers = std::tuple<Matrix<Args, 1, double>...>;
 	using WeightLayers = typename Weights<Args...>::type;
 	using Input = typename std::tuple_element<0, NeuronLayers>::type;
 	using Output = typename std::tuple_element<std::tuple_size<NeuronLayers>::value - 1, NeuronLayers>::type;
@@ -92,7 +92,7 @@ private:
 	template<size_t I>
 	void forwardLayer()
 	{
-		std::get<I+1>(m_aggregatedLayers) = std::get<I>(m_weightLayers) * std::get<I>(m_neuronLayers);
+		std::get<I+1>(m_aggregatedLayers) = std::get<I>(m_neuronLayers) * std::get<I>(m_weightLayers);
 		std::get<I+1>(m_neuronLayers) = std::get<I+1>(m_aggregatedLayers);
 		std::get<I+1>(m_neuronLayers).apply(&Activation::f);
 	}
@@ -108,9 +108,9 @@ private:
 	{
 		std::get<I + 1>(m_aggregatedLayers).apply(&Activation::fp);
 		auto error = multiply(std::get<I + 1>(m_errorLayers), std::get<I + 1>(m_aggregatedLayers));
-		auto delta = LearningRate * error * std::get<I>(m_neuronLayers).transpose();
+		auto delta = LearningRate * std::get<I>(m_neuronLayers).transpose() * error;
 
-		std::get<I>(m_errorLayers) = std::get<I>(m_weightLayers).transpose() * error;
+		std::get<I>(m_errorLayers) = error * std::get<I>(m_weightLayers).transpose();
 		std::get<I>(m_weightLayers) += delta;
 	}
 
