@@ -53,8 +53,9 @@ public:
 	{
 	}
 
-	constexpr Network(WeightLayers&& l)
-		: m_weightLayers{l}
+	constexpr Network(WeightLayers&& l, double rate)
+		: m_learningRate{rate}
+		, m_weightLayers{l}
 	{
 	}
 
@@ -108,14 +109,14 @@ private:
 	{
 		std::get<I + 1>(m_aggregatedLayers).apply(&Activation::fp);
 		auto error = multiply(std::get<I + 1>(m_errorLayers), std::get<I + 1>(m_aggregatedLayers));
-		auto delta = LearningRate * std::get<I>(m_neuronLayers).transpose() * error;
+		auto delta = m_learningRate * std::get<I>(m_neuronLayers).transpose() * error;
 
 		std::get<I>(m_errorLayers) = error * std::get<I>(m_weightLayers).transpose();
 		std::get<I>(m_weightLayers) += delta;
 	}
 
 	constexpr static size_t IndexOfLastLayer = std::tuple_size<NeuronLayers>::value - 1;
-	constexpr static double LearningRate = 0.5;
+	const double m_learningRate;
 
 	NeuronLayers m_neuronLayers;
 	NeuronLayers m_aggregatedLayers;
