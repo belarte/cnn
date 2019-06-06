@@ -40,11 +40,10 @@ struct Topology
 	using Output = typename std::tuple_element<std::tuple_size<NeuronLayers>::value - 1, NeuronLayers>::type;
 };
 
-template<typename Activation, size_t... Args>
+template<typename InnerTopology, typename Activation>
 class Network
 {
 public:
-	using InnerTopology = Topology<Args...>;
 	using NeuronLayers = typename InnerTopology::NeuronLayers;
 	using WeightLayers = typename InnerTopology::WeightLayers;
 	using Input = typename InnerTopology::Input;

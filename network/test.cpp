@@ -4,7 +4,7 @@
 void forward_no_hidden_layer()
 {
 	Matrix<3, 2, double> m{ {{ {1, 2, 3}, {4, 5, 6} }} };
-	auto n = Network<Identity, 3, 2>{std::make_tuple(m)};
+	auto n = Network<Topology<3, 2>, Identity>{std::make_tuple(m)};
 
 	Matrix<1, 3, double> input{ {{ {3}, {2}, {1} }} };
 	n.forward(input);
@@ -18,7 +18,7 @@ void forward_two_hidden_layers()
 	Matrix<3, 2, double> l1{ {{ {1, 2, 3}, {4, 5, 6} }} };
 	Matrix<2, 5, double> l2{ {{ {1, 0}, {0, 2}, {3, 0}, {0, 4}, {5, 0} }} };
 	Matrix<5, 1, double> l3{ {{ {5, 4, 3, 2, 1} }} };
-	auto n = Network<Identity, 3, 2, 5, 1>{std::make_tuple(l1, l2, l3)};
+	auto n = Network<Topology<3, 2, 5, 1>, Identity>{std::make_tuple(l1, l2, l3)};
 
 	Matrix<1, 3, double> input{ {{ {3}, {2}, {1} }} };
 	n.forward(input);
@@ -30,7 +30,7 @@ void forward_two_hidden_layers()
 void error_is_null_when_output_equals_expected()
 {
 	Matrix<3, 2, double> m{ {{ {1, 2, 3}, {4, 5, 6} }} };
-	auto n = Network<Identity, 3, 2>{std::make_tuple(m)};
+	auto n = Network<Topology<3, 2>, Identity>{std::make_tuple(m)};
 
 	Matrix<1, 3, double> input{ {{ {3}, {2}, {1} }} };
 	n.forward(input);
@@ -43,7 +43,7 @@ void error_is_null_when_output_equals_expected()
 void error_is_positive_when_output_differs_from_expected()
 {
 	Matrix<3, 2, double> m{ {{ {1, 2, 3}, {4, 5, 6} }} };
-	auto n = Network<Identity, 3, 2>{std::make_tuple(m)};
+	auto n = Network<Topology<3, 2>, Identity>{std::make_tuple(m)};
 
 	Matrix<1, 3, double> input{ {{ {3}, {2}, {1} }} };
 	n.forward(input);
@@ -57,7 +57,7 @@ void backpropagation_corrects_weights()
 {
 	Matrix<3, 4, double> l1{ {{ {1, 2, 1}, {3, 1, 4}, {1, 5, 1}, {6, 1, 7} }} };
 	Matrix<4, 2, double> l2{ {{ {0, 1, 2, 0}, {1, 2, 0, 1} }} };
-	auto n = Network<Identity, 3, 4, 2>{ std::make_tuple(l1, l2) };
+	auto n = Network<Topology<3, 4, 2>, Identity>{ std::make_tuple(l1, l2) };
 
 	Matrix<1, 3, double> intput{ {{ {1}, {0}, {1} }} };
 	Matrix<1, 2, double> trainingOutput{ {{ {0}, {30} }} };
