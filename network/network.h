@@ -31,14 +31,24 @@ struct Identity
 	}
 };
 
-template<typename Activation, size_t... Args>
-class Network
+template<size_t... Args>
+struct Topology
 {
-public:
 	using NeuronLayers = std::tuple<Matrix<1, Args, double>...>;
 	using WeightLayers = typename Weights<Args...>::type;
 	using Input = typename std::tuple_element<0, NeuronLayers>::type;
 	using Output = typename std::tuple_element<std::tuple_size<NeuronLayers>::value - 1, NeuronLayers>::type;
+};
+
+template<typename Activation, size_t... Args>
+class Network
+{
+public:
+	using InnerTopology = Topology<Args...>;
+	using NeuronLayers = typename InnerTopology::NeuronLayers;
+	using WeightLayers = typename InnerTopology::WeightLayers;
+	using Input = typename InnerTopology::Input;
+	using Output = typename InnerTopology::Output;
 
 	constexpr Network()
 	{
