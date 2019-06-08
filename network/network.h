@@ -18,6 +18,12 @@ struct Weights<A, B>
 	using type = std::tuple<Matrix<B, A, double>>;
 };
 
+template<size_t A, size_t... Args>
+struct In
+{
+	using Input = std::array<double, A>;
+};
+
 } // namespace
 
 struct Identity
@@ -36,7 +42,7 @@ struct Topology
 {
 	using NeuronLayers = std::tuple<Matrix<Args, 1, double>...>;
 	using WeightLayers = typename Weights<Args...>::type;
-	using Input = typename std::tuple_element<0, NeuronLayers>::type;
+	using Input = typename In<Args...>::Input;
 	using Output = typename std::tuple_element<std::tuple_size<NeuronLayers>::value - 1, NeuronLayers>::type;
 };
 
@@ -61,7 +67,9 @@ public:
 
 	constexpr void forward(Input in)
 	{
-		std::get<0>(m_neuronLayers) = in;
+		for (size_t i=0; i<in.size(); ++i) {
+			std::get<0>(m_neuronLayers)(i, 0) = in[i];
+		}
 		forward(std::make_index_sequence<std::tuple_size<WeightLayers>::value>{});
 	}
 
