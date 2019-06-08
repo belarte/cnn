@@ -14,6 +14,6 @@
          std::cerr << "Error in file " << __FILE__ << ":" << __LINE__; \
 			std::cerr << " in function " << __func__ << "() => " << #left << " != " << #right; \
 			std::cerr << "\nwith " << #left << " =\n" << left; \
-			std::cerr << "and " << #right << " =\n" << right; \
+			std::cerr << "\nand " << #right << " =\n" << right << std::endl; \
 		} \
    } while(0)
