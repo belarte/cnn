@@ -75,6 +75,33 @@ void scalar_multiplication()
 	ASSERT_EQ(2u * m2, m3);
 }
 
+void read_value()
+{
+	Matrix<2, 3> m{ {{ {1, 2}, {3, 4}, {5, 6} }} };
+
+	ASSERT_EQ(m(0, 0), 1);
+	ASSERT_EQ(m(1, 0), 2);
+	ASSERT_EQ(m(0, 1), 3);
+	ASSERT_EQ(m(1, 1), 4);
+	ASSERT_EQ(m(0, 2), 5);
+	ASSERT_EQ(m(1, 2), 6);
+}
+
+void write_value()
+{
+	Matrix<2, 3> m{ {{ {1, 2}, {3, 4}, {5, 6} }} };
+	m(0, 0) = 0;
+	m(1, 1) = 9;
+	m(0, 2) = 7;
+
+	ASSERT_EQ(m(0, 0), 0);
+	ASSERT_EQ(m(1, 0), 2);
+	ASSERT_EQ(m(0, 1), 3);
+	ASSERT_EQ(m(1, 1), 9);
+	ASSERT_EQ(m(0, 2), 7);
+	ASSERT_EQ(m(1, 2), 6);
+}
+
 void transpose()
 {
 	Matrix<2, 3> m1{ {{ {1, 2}, {3, 4}, {5, 6} }} };
@@ -112,6 +139,8 @@ int main(int, char**)
 	substraction();
 	multiplication();
 	scalar_multiplication();
+	read_value();
+	write_value();
 	transpose();
 	multiplication_of_transpose();
 	multiply();

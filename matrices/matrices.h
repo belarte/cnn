@@ -22,6 +22,16 @@ public:
 		return m_data == other.m_data;
 	}
 
+	const Type& operator()(size_t i, size_t j) const
+	{
+		return m_data[j][i];
+	}
+
+	Type& operator()(size_t i, size_t j)
+	{
+		return m_data[j][i];
+	}
+
 	constexpr auto& operator+=(const Matrix<Columns, Rows, Type>& other) {
 		for (size_t j=0; j<Rows; ++j) {
 			for (size_t i=0; i<Columns; ++i) {
