@@ -19,9 +19,16 @@ struct Weights<A, B>
 };
 
 template<size_t A, size_t... Args>
-struct In
+struct InAndOut
 {
 	using Input = std::array<double, A>;
+	using Output = typename InAndOut<Args...>::Output;
+};
+
+template<size_t A>
+struct InAndOut<A>
+{
+	using Output = std::array<double, A>;
 };
 
 } // namespace
@@ -42,8 +49,8 @@ struct Topology
 {
 	using NeuronLayers = std::tuple<Matrix<Args, 1, double>...>;
 	using WeightLayers = typename Weights<Args...>::type;
-	using Input = typename In<Args...>::Input;
-	using Output = typename std::tuple_element<std::tuple_size<NeuronLayers>::value - 1, NeuronLayers>::type;
+	using Input = typename InAndOut<Args...>::Input;
+	using Output = typename InAndOut<Args...>::Output;
 };
 
 template<typename InnerTopology, typename Activation>
@@ -75,20 +82,29 @@ public:
 
 	constexpr void backpropagate(Output output)
 	{
-		std::get<IndexOfLastLayer>(m_errorLayers) = output - std::get<IndexOfLastLayer>(m_neuronLayers);
+		auto tmp = std::remove_reference_t<decltype(std::get<IndexOfLastLayer>(m_neuronLayers))>{ {{ output }} };
+		std::get<IndexOfLastLayer>(m_errorLayers) = tmp - std::get<IndexOfLastLayer>(m_neuronLayers);
 		backpropagate(std::make_index_sequence<std::tuple_size<WeightLayers>::value>{});
 	}
 
-	constexpr const Output& output() const
+	constexpr Output output() const
 	{
-		return std::get<IndexOfLastLayer>(m_neuronLayers);
+		Output out{0};
+		for (size_t i=0; i<out.size(); ++i) {
+			out[i] = std::get<IndexOfLastLayer>(m_neuronLayers)(i, 0);
+		}
+		return out;
 	}
 
-	constexpr const Output error(Output expected) const
+	constexpr double error(Output expected) const
 	{
-		Output result = output() - expected;
-		result.apply([](double x){ return x * x / 2; });
-		return result;
+		auto out = output();
+		double err = 0;
+		for (size_t i=0; i<expected.size(); ++i) {
+			auto e = out[i] - expected[i];
+			err += e * e / 2;
+		}
+		return err;
 	}
 
 private:
