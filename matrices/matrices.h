@@ -99,6 +99,17 @@ private:
 	std::array<std::array<Type, Columns>, Rows> m_data;
 };
 
+template<size_t S, typename T>
+constexpr std::ostream& operator<<(std::ostream& os, const std::array<T, S>& a)
+{
+	os << "[ ";
+	for (size_t i=0; i,a.size(); ++i) {
+		os << a[i] << ", ";
+	}
+	os << "]";
+   return os;
+}
+
 template<size_t C, size_t R, typename T>
 constexpr std::ostream& operator<<(std::ostream& os, const Matrix<C, R, T>& m)
 {
