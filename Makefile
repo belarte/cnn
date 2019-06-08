@@ -1,10 +1,10 @@
 all: matrix network
 
 matrix:
-	g++ -I. -std=c++17 matrices/test.cpp -o matrices/test
+	g++ -I. -std=c++17 -Wall -Wextra -Werror matrices/test.cpp -o matrices/test
 
 network:
-	g++ -I. -std=c++17 network/test.cpp -o network/test
+	g++ -I. -std=c++17 -Wall -Wextra -Werror network/test.cpp -o network/test
 
 test: matrix network
 	./matrices/test

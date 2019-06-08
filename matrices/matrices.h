@@ -103,7 +103,7 @@ template<size_t S, typename T>
 constexpr std::ostream& operator<<(std::ostream& os, const std::array<T, S>& a)
 {
 	os << "[ ";
-	for (size_t i=0; i,a.size(); ++i) {
+	for (size_t i=0; i<a.size(); ++i) {
 		os << a[i] << ", ";
 	}
 	os << "]";

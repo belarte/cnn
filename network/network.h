@@ -39,7 +39,7 @@ struct Identity
 		return x;
 	}
 
-	static constexpr double fp(double x) {
+	static constexpr double fp(double) {
 		return 1;
 	}
 };
