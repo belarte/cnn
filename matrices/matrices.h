@@ -24,12 +24,12 @@ public:
 
 	const Type& operator()(size_t i, size_t j) const
 	{
-		return m_data[j][i];
+		return m_data.at(j).at(i);
 	}
 
 	Type& operator()(size_t i, size_t j)
 	{
-		return m_data[j][i];
+		return m_data.at(j).at(i);
 	}
 
 	constexpr auto& operator+=(const Matrix<Columns, Rows, Type>& other) {
