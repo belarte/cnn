@@ -134,16 +134,22 @@ int main(int, char**)
 {
 	std::cout << "Start testing..." << std::endl;
 
-	comparison();
-	addition();
-	substraction();
-	multiplication();
-	scalar_multiplication();
-	read_value();
-	write_value();
-	transpose();
-	multiplication_of_transpose();
-	multiply();
+	try {
+		comparison();
+		addition();
+		substraction();
+		multiplication();
+		scalar_multiplication();
+		read_value();
+		write_value();
+		transpose();
+		multiplication_of_transpose();
+		multiply();
+	} catch(std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+		return 1;
+	}
 
 	std::cout << "Done!" << std::endl;
 	return 0;

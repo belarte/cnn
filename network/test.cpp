@@ -76,11 +76,17 @@ int main(int, char**)
 {
 	std::cout << "Start testing..." << std::endl;
 
-	forward_no_hidden_layer();
-	forward_two_hidden_layers();
-	error_is_null_when_output_equals_expected();
-	error_is_positive_when_output_differs_from_expected();
-	backpropagation_corrects_weights();
+	try {
+		forward_no_hidden_layer();
+		forward_two_hidden_layers();
+		error_is_null_when_output_equals_expected();
+		error_is_positive_when_output_differs_from_expected();
+		backpropagation_corrects_weights();
+	} catch(std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+		return 1;
+	}
 
 	std::cout << "Done!" << std::endl;
 	return 0;
