@@ -1,25 +1,24 @@
 #include "matrices.h"
-#include "test/assert.h"
 
-#include <iostream>
+#include "gtest/gtest.h"
 
-void comparison()
+TEST(Matrix, comparison)
 {
 	Matrix<2, 3> m1;
 	Matrix<2, 3> m2{ {{ {1, 2}, {3, 4}, {5, 6} }} };
 	Matrix<2, 3> m3{ {{ {1, 2}, {3, 4}, {5, 6} }} };
 	Matrix<2, 3> m4{ {{ {1, 2}, {3, 3}, {5, 6} }} };
 
-	ASSERT(m2 == m3);
-	ASSERT(m3 == m2);
+	ASSERT_EQ(m2, m3);
+	ASSERT_EQ(m3, m2);
 
-	ASSERT(m1 != m2);
-	ASSERT(m2 != m4);
-	ASSERT(m3 != m4);
-	ASSERT(m4 != m1);
+	ASSERT_NE(m1, m2);
+	ASSERT_NE(m2, m4);
+	ASSERT_NE(m3, m4);
+	ASSERT_NE(m4, m1);
 }
 
-void addition()
+TEST(Matrix, addition)
 {
 	Matrix<2, 3> m1;
 	Matrix<2, 3> m2{ {{ {1, 2}, {2, 3}, {3, 4} }} };
@@ -27,15 +26,15 @@ void addition()
 	Matrix<2, 3> m4{ {{ {1, 2}, {2, 1}, {2, 2} }} };
 	Matrix<2, 3> m5{ {{ {2, 4}, {4, 4}, {5, 6} }} };
 
-	ASSERT(m2 + m1 == m2);
-	ASSERT(m1 + m3 == m2);
-	ASSERT(m2 + m4 == m5);
-	ASSERT(m3 + m4 == m5);
-	ASSERT(m2 + m4 == m3 + m4);
-	ASSERT(m2 + m4 + m1 == m3 + m4);
+	ASSERT_EQ(m2 + m1, m2);
+	ASSERT_EQ(m1 + m3, m2);
+	ASSERT_EQ(m2 + m4, m5);
+	ASSERT_EQ(m3 + m4, m5);
+	ASSERT_EQ(m2 + m4, m3 + m4);
+	ASSERT_EQ(m2 + m4 + m1, m3 + m4);
 }
 
-void substraction()
+TEST(Matrix, substraction)
 {
 	Matrix<2, 3> m1;
 	Matrix<2, 3> m2{ {{ {1, 2}, {2, 3}, {3, 4} }} };
@@ -45,15 +44,15 @@ void substraction()
 	Matrix<2, 3> m5{ {{ {0, 0}, {0, 2}, {1, 2} }} };
 	Matrix<2, 3> m6{ {{ {0, 0}, {0, -2}, {-1, -2} }} };
 
-	ASSERT(m2 - m1 == m2);
-	ASSERT(m2 - m3 == m1);
-	ASSERT(m2 - m4 == m5);
-	ASSERT(m4 - m3 == m6);
-	ASSERT(m2 - m4 == m3 - m4);
-	ASSERT(m2 - m4 - m1 == m3 - m4);
+	ASSERT_EQ(m2 - m1, m2);
+	ASSERT_EQ(m2 - m3, m1);
+	ASSERT_EQ(m2 - m4, m5);
+	ASSERT_EQ(m4 - m3, m6);
+	ASSERT_EQ(m2 - m4, m3 - m4);
+	ASSERT_EQ(m2 - m4 - m1, m3 - m4);
 }
 
-void multiplication()
+TEST(Matrix, multiplication)
 {
 	Matrix<2, 3> m1{ {{ {1, 2}, {3, 4}, {5, 6} }} };
 	Matrix<3, 2> m2{ {{ {1, 2, 3}, {4, 5, 6} }} };
@@ -64,7 +63,7 @@ void multiplication()
 	ASSERT_EQ(m2 * m1, m4);
 }
 
-void scalar_multiplication()
+TEST(Matrix, scalar_multiplication)
 {
 	Matrix<2, 3> m1;
 	Matrix<2, 3> m2{ {{ {1, 2}, {2, 3}, {3, 4} }} };
@@ -75,7 +74,7 @@ void scalar_multiplication()
 	ASSERT_EQ(2u * m2, m3);
 }
 
-void read_value()
+TEST(Matrix, read_value)
 {
 	Matrix<2, 3> m{ {{ {1, 2}, {3, 4}, {5, 6} }} };
 
@@ -87,7 +86,7 @@ void read_value()
 	ASSERT_EQ(m(1, 2), 6);
 }
 
-void write_value()
+TEST(Matrix, write_value)
 {
 	Matrix<2, 3> m{ {{ {1, 2}, {3, 4}, {5, 6} }} };
 	m(0, 0) = 0;
@@ -102,7 +101,7 @@ void write_value()
 	ASSERT_EQ(m(1, 2), 6);
 }
 
-void transpose()
+TEST(Matrix, transpose)
 {
 	Matrix<2, 3> m1{ {{ {1, 2}, {3, 4}, {5, 6} }} };
 	Matrix<3, 2> m2{ {{ {1, 3, 5}, {2, 4, 6} }} };
@@ -111,7 +110,7 @@ void transpose()
 	ASSERT_EQ(m2.transpose(), m1);
 }
 
-void multiplication_of_transpose()
+TEST(Matrix, multiplication_of_transpose)
 {
 	Matrix<3, 2> m1{ {{ {1, 2, 3}, {4, 5, 6} }} };
 	Matrix<1, 3> m2{ {{ {1}, {2}, {3} }} };
@@ -121,7 +120,7 @@ void multiplication_of_transpose()
 	ASSERT_EQ(m2.transpose() * m1.transpose(), m3.transpose());
 }
 
-void multiply()
+TEST(Matrix, multiply)
 {
 	Matrix<3, 2> m1{ {{ {1, 2, 3}, {4, 5, 6} }} };
 	Matrix<3, 2> m2{ {{ {2, 3, 4}, {5, 6, 7} }} };
@@ -130,27 +129,7 @@ void multiply()
 	ASSERT_EQ(multiply(m1, m2), m3);
 }
 
-int main(int, char**)
-{
-	std::cout << "Start testing..." << std::endl;
-
-	try {
-		comparison();
-		addition();
-		substraction();
-		multiplication();
-		scalar_multiplication();
-		read_value();
-		write_value();
-		transpose();
-		multiplication_of_transpose();
-		multiply();
-	} catch(std::exception& e)
-	{
-		std::cerr << e.what() << std::endl;
-		return 1;
-	}
-
-	std::cout << "Done!" << std::endl;
-	return 0;
+int main(int argc, char **argv) {
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }

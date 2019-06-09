@@ -1,7 +1,8 @@
 #include "network.h"
-#include "test/assert.h"
 
-void forward_no_hidden_layer()
+#include "gtest/gtest.h"
+
+TEST(Network, forward_no_hidden_layer)
 {
 	using Net = Network<Topology<3, 2>, Identity>;
 
@@ -14,7 +15,7 @@ void forward_no_hidden_layer()
 	ASSERT_EQ(n.output(), output);
 }
 
-void forward_two_hidden_layers()
+TEST(Network, forward_two_hidden_layers)
 {
 	using Net = Network<Topology<3, 2, 5, 1>, Identity>;
 
@@ -29,7 +30,7 @@ void forward_two_hidden_layers()
 	ASSERT_EQ(n.output(), output);
 }
 
-void error_is_null_when_output_equals_expected()
+TEST(Network, error_is_null_when_output_equals_expected)
 {
 	using Net = Network<Topology<3, 2>, Identity>;
 	Matrix<2, 3, double> m{ {{ {1, 4}, {2, 5}, {3, 6} }} };
@@ -41,7 +42,7 @@ void error_is_null_when_output_equals_expected()
 	ASSERT_EQ(n.error(expected), 0);
 }
 
-void error_is_positive_when_output_differs_from_expected()
+TEST(Network, error_is_positive_when_output_differs_from_expected)
 {
 	using Net = Network<Topology<3, 2>, Identity>;
 
@@ -54,7 +55,7 @@ void error_is_positive_when_output_differs_from_expected()
 	ASSERT_EQ(n.error(expected), 10);
 }
 
-void backpropagation_corrects_weights()
+TEST(Network, backpropagation_corrects_weights)
 {
 	using Net = Network<Topology<3, 4, 2>, Identity>;
 
@@ -72,22 +73,7 @@ void backpropagation_corrects_weights()
 	ASSERT_EQ(n.output(), expectedOutput);
 }
 
-int main(int, char**)
-{
-	std::cout << "Start testing..." << std::endl;
-
-	try {
-		forward_no_hidden_layer();
-		forward_two_hidden_layers();
-		error_is_null_when_output_equals_expected();
-		error_is_positive_when_output_differs_from_expected();
-		backpropagation_corrects_weights();
-	} catch(std::exception& e)
-	{
-		std::cerr << e.what() << std::endl;
-		return 1;
-	}
-
-	std::cout << "Done!" << std::endl;
-	return 0;
+int main(int argc, char **argv) {
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }
