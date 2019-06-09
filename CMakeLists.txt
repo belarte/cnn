@@ -11,11 +11,15 @@ enable_testing()
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
+function(linkTestLibraries exec)
+	target_link_libraries(${exec} ${GTEST_BOTH_LIBRARIES} pthread)
+endfunction()
+
 add_executable(test_matrix matrices/test.cpp)
-target_link_libraries(test_matrix ${GTEST_BOTH_LIBRARIES} pthread)
+linkTestLibraries(test_matrix)
 
 add_executable(test_network network/test.cpp)
-target_link_libraries(test_network ${GTEST_BOTH_LIBRARIES} pthread)
+linkTestLibraries(test_network)
 
 add_test(
 	NAME Matrices
