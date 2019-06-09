@@ -15,18 +15,5 @@ function(linkTestLibraries exec)
 	target_link_libraries(${exec} ${GTEST_BOTH_LIBRARIES} pthread)
 endfunction()
 
-add_executable(test_matrix matrices/test.cpp)
-linkTestLibraries(test_matrix)
-
-add_executable(test_network network/test.cpp)
-linkTestLibraries(test_network)
-
-add_test(
-	NAME Matrices
-	COMMAND test_matrix
-)
-
-add_test(
-	NAME Network
-	COMMAND test_network
-)
+add_subdirectory(matrices)
+add_subdirectory(network)
