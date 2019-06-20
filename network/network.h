@@ -19,6 +19,12 @@ struct Weights<A, B>
 };
 
 template<size_t A, size_t... Args>
+struct Biases
+{
+	using type = std::tuple<Matrix<Args, 1, double>...>;
+};
+
+template<size_t A, size_t... Args>
 struct InAndOut
 {
 	using Input = std::array<double, A>;
@@ -49,6 +55,7 @@ struct Topology
 {
 	using NeuronLayers = std::tuple<Matrix<Args, 1, double>...>;
 	using WeightLayers = typename Weights<Args...>::type;
+	using BiasLayers = typename Biases<Args...>::type;
 	using Input = typename InAndOut<Args...>::Input;
 	using Output = typename InAndOut<Args...>::Output;
 };
@@ -59,6 +66,7 @@ class Network
 public:
 	using NeuronLayers = typename InnerTopology::NeuronLayers;
 	using WeightLayers = typename InnerTopology::WeightLayers;
+	using BiasLayers = typename InnerTopology::BiasLayers;
 	using Input = typename InnerTopology::Input;
 	using Output = typename InnerTopology::Output;
 
@@ -66,9 +74,10 @@ public:
 	{
 	}
 
-	constexpr Network(WeightLayers&& l, double rate)
+	constexpr Network(WeightLayers&& l, BiasLayers&& b, double rate)
 		: m_learningRate{rate}
 		, m_weightLayers{l}
+		, m_biasLayers{b}
 	{
 	}
 
@@ -117,7 +126,7 @@ private:
 	template<size_t I>
 	void forwardLayer()
 	{
-		std::get<I+1>(m_aggregatedLayers) = std::get<I>(m_neuronLayers) * std::get<I>(m_weightLayers);
+		std::get<I+1>(m_aggregatedLayers) = std::get<I>(m_neuronLayers) * std::get<I>(m_weightLayers) + std::get<I>(m_biasLayers);
 		std::get<I+1>(m_neuronLayers) = std::get<I+1>(m_aggregatedLayers);
 		std::get<I+1>(m_neuronLayers).apply(&Activation::f);
 	}
@@ -137,6 +146,7 @@ private:
 
 		std::get<I>(m_errorLayers) = error * std::get<I>(m_weightLayers).transpose();
 		std::get<I>(m_weightLayers) += delta;
+		std::get<I>(m_biasLayers) += m_learningRate * error;
 	}
 
 	constexpr static size_t IndexOfLastLayer = std::tuple_size<NeuronLayers>::value - 1;
@@ -146,4 +156,5 @@ private:
 	NeuronLayers m_aggregatedLayers;
 	NeuronLayers m_errorLayers;
 	WeightLayers m_weightLayers;
+	BiasLayers m_biasLayers;
 };
