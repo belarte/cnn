@@ -72,7 +72,7 @@ public:
 		return Matrix<Rows, Columns, Type>{result};
 	}
 
-	constexpr std::string to_string() const {
+	std::string to_string() const {
 		std::ostringstream oss;
 
 		for (size_t j=0; j<Rows; ++j) {
