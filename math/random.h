@@ -2,6 +2,25 @@
 
 #include <random>
 
+namespace {
+
+template<typename T, class Enable = void>
+struct Distribution{};
+
+template<typename T>
+struct Distribution<T, typename std::enable_if<std::is_integral<T>::value>::type>
+{
+	using type = std::uniform_int_distribution<T>;
+};
+
+template<typename T>
+struct Distribution<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
+{
+	using type = std::uniform_real_distribution<T>;
+};
+
+}
+
 template<typename T>
 class RandomGenerator
 {
@@ -18,5 +37,5 @@ public:
 
 private:
 	std::mt19937_64 m_engine;
-	std::uniform_int_distribution<T> m_distribution;
+	typename Distribution<T>::type m_distribution;
 };
