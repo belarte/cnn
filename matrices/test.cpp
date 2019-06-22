@@ -2,6 +2,33 @@
 
 #include "gtest/gtest.h"
 
+TEST(Matrix, zero_init)
+{
+	Matrix<2, 3> m;
+
+	for (size_t j=0; j<3; ++j) {
+		for (size_t i=0; i<2; ++i) {
+			ASSERT_EQ(0, m(i, j));
+		}
+	}
+}
+
+TEST(Matrix, random_init)
+{
+	int min = 5;
+	int max = 10;
+	RandomGenerator gen(min, max);
+	Matrix<2, 3> m{ gen };
+
+	for (size_t j=0; j<3; ++j) {
+		for (size_t i=0; i<2; ++i) {
+			auto val = m(i, j);
+			ASSERT_GE(val, min);
+			ASSERT_LE(val, max);
+		}
+	}
+}
+
 TEST(Matrix, comparison)
 {
 	Matrix<2, 3> m1;

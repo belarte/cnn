@@ -1,5 +1,7 @@
 #pragma once
 
+#include "math/random.h"
+
 #include <array>
 #include <string>
 #include <iostream>
@@ -12,6 +14,15 @@ class Matrix
 {
 public:
 	constexpr Matrix() : m_data {0} {
+	}
+
+	constexpr Matrix(RandomGenerator<Type> gen)
+	{
+		for (size_t j=0; j<Rows; ++j) {
+			for (size_t i=0; i<Columns; ++i) {
+				m_data[j][i] = gen.yield();
+			}
+		}
 	}
 
 	constexpr Matrix(const std::array<std::array<Type, Columns>, Rows>& data) :
