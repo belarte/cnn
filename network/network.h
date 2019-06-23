@@ -9,13 +9,35 @@ namespace {
 template<size_t A, size_t B, size_t... Args>
 struct Weights
 {
-	using type = decltype(std::tuple_cat(std::tuple<Matrix<B, A, double>>{}, typename Weights<B, Args...>::type{}));
+	using matrix_type = Matrix<B, A, double>;
+	using type = decltype(std::tuple_cat(std::tuple<matrix_type>{}, Weights<B, Args...>::value));
+
+	Weights()
+		: value{ std::tuple_cat(std::make_tuple(matrix_type{}, Weights<B, Args...>{})) }
+	{}
+
+	Weights(RandomGenerator<double> gen)
+		: value{ std::tuple_cat(std::make_tuple(matrix_type{ gen }), Weights<B, Args...>{ gen }.value) }
+	{}
+
+	type value;
 };
 
 template<size_t A, size_t B>
 struct Weights<A, B>
 {
-	using type = std::tuple<Matrix<B, A, double>>;
+	using matrix_type = Matrix<B, A, double>;
+	using type = std::tuple<matrix_type>;
+
+	Weights()
+		: value{ type{} }
+	{}
+
+	Weights(RandomGenerator<double> gen)
+		: value{ std::make_tuple(matrix_type{ gen }) }
+	{}
+
+	type value;
 };
 
 template<size_t A, size_t... Args>
@@ -58,6 +80,8 @@ struct Topology
 	using BiasLayers = typename Biases<Args...>::type;
 	using Input = typename InAndOut<Args...>::Input;
 	using Output = typename InAndOut<Args...>::Output;
+
+	using WeightsGen = Weights<Args...>;
 };
 
 template<typename InnerTopology, typename Activation>
@@ -72,6 +96,16 @@ public:
 
 	constexpr Network()
 	{
+	}
+
+	Network(RandomGenerator<double> gen, double rate)
+		: m_learningRate{ rate }
+		, m_weightLayers{ typename InnerTopology::WeightsGen{ gen }.value }
+	{
+		std::cout << std::get<0>(m_weightLayers);
+		std::cout << std::get<0>(m_biasLayers);
+		std::cout << std::get<1>(m_weightLayers);
+		std::cout << std::get<1>(m_biasLayers);
 	}
 
 	constexpr Network(WeightLayers&& l, BiasLayers&& b, double rate)

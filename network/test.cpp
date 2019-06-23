@@ -90,6 +90,20 @@ TEST(Network, bias)
 	ASSERT_EQ(expected, n.output());
 }
 
+TEST(Network, random_init)
+{
+	using Net = Network<Topology<2, 3, 1>, Identity>;
+
+	RandomGenerator gen(1.0, 2.0);
+	auto n = Net{ gen, 0 };
+	Net::Input in{ 1, 1 };
+	Net::Output out{ 0 };
+
+	n.forward(in);
+	auto error = n.error(out);
+	ASSERT_NE(0, error);
+}
+
 int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
