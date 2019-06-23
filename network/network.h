@@ -44,6 +44,16 @@ template<size_t A, size_t... Args>
 struct Biases
 {
 	using type = std::tuple<Matrix<Args, 1, double>...>;
+
+	Biases()
+		: value{ type{} }
+	{}
+
+	Biases(RandomGenerator<double> gen)
+		: value{ std::make_tuple(Matrix<Args, 1, double>{ gen }...) }
+	{}
+
+	type value;
 };
 
 template<size_t A, size_t... Args>
@@ -82,6 +92,7 @@ struct Topology
 	using Output = typename InAndOut<Args...>::Output;
 
 	using WeightsGen = Weights<Args...>;
+	using BiasesGen = Biases<Args...>;
 };
 
 template<typename InnerTopology, typename Activation>
@@ -101,6 +112,7 @@ public:
 	Network(RandomGenerator<double> gen, double rate)
 		: m_learningRate{ rate }
 		, m_weightLayers{ typename InnerTopology::WeightsGen{ gen }.value }
+		, m_biasLayers{ typename InnerTopology::BiasesGen{ gen }.value }
 	{
 		std::cout << std::get<0>(m_weightLayers);
 		std::cout << std::get<0>(m_biasLayers);
