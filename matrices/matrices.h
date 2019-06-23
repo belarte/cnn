@@ -16,7 +16,7 @@ public:
 	constexpr Matrix() : m_data {0} {
 	}
 
-	constexpr Matrix(RandomGenerator<Type> gen)
+	constexpr Matrix(RandomGenerator<Type>& gen)
 	{
 		for (size_t j=0; j<Rows; ++j) {
 			for (size_t i=0; i<Columns; ++i) {

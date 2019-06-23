@@ -16,7 +16,7 @@ struct Weights
 		: value{ std::tuple_cat(std::make_tuple(matrix_type{}, Weights<B, Args...>{})) }
 	{}
 
-	Weights(RandomGenerator<double> gen)
+	Weights(RandomGenerator<double>& gen)
 		: value{ std::tuple_cat(std::make_tuple(matrix_type{ gen }), Weights<B, Args...>{ gen }.value) }
 	{}
 
@@ -33,7 +33,7 @@ struct Weights<A, B>
 		: value{ type{} }
 	{}
 
-	Weights(RandomGenerator<double> gen)
+	Weights(RandomGenerator<double>& gen)
 		: value{ std::make_tuple(matrix_type{ gen }) }
 	{}
 
