@@ -114,10 +114,6 @@ public:
 		, m_weightLayers{ typename InnerTopology::WeightsGen{ gen }.value }
 		, m_biasLayers{ typename InnerTopology::BiasesGen{ gen }.value }
 	{
-		std::cout << std::get<0>(m_weightLayers);
-		std::cout << std::get<0>(m_biasLayers);
-		std::cout << std::get<1>(m_weightLayers);
-		std::cout << std::get<1>(m_biasLayers);
 	}
 
 	constexpr Network(WeightLayers&& l, BiasLayers&& b, double rate)
