@@ -1,6 +1,7 @@
 #pragma once
 
 #include "matrices/matrices.h"
+#include "math/functions.h"
 
 #include <tuple>
 
@@ -70,17 +71,6 @@ struct InAndOut<A>
 };
 
 } // namespace
-
-struct Identity
-{
-	static constexpr double f(double x) {
-		return x;
-	}
-
-	static constexpr double fp(double) {
-		return 1;
-	}
-};
 
 template<size_t... Args>
 struct Topology

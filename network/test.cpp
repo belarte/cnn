@@ -2,6 +2,8 @@
 
 #include "gtest/gtest.h"
 
+using Identity = function::Identity;
+
 TEST(Network, forward_no_hidden_layer)
 {
 	using Net = Network<Topology<3, 2>, Identity>;
