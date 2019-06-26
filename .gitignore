@@ -36,3 +36,6 @@ build/
 
 # YCM
 compile_commands.json
+
+# Tags
+tags
