@@ -16,6 +16,7 @@ function(linkTestLibraries exec)
 	target_link_libraries(${exec} ${GTEST_BOTH_LIBRARIES} pthread)
 endfunction()
 
+add_subdirectory(app)
 add_subdirectory(math)
 add_subdirectory(matrices)
 add_subdirectory(network)

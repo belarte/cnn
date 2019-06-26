@@ -100,6 +100,14 @@ public:
 		const double LearningRate;
 	};
 
+	struct Sample
+	{
+		Input input;
+		Output output;
+	};
+
+	using TrainingSample = std::vector<Sample>;
+
 	Network(RandomGenerator<double> gen, Parameters params)
 		: m_params{ params }
 		, m_weightLayers{ typename InnerTopology::WeightsGen{ gen }.value }
@@ -112,6 +120,27 @@ public:
 		, m_weightLayers{ l }
 		, m_biasLayers{ b }
 	{
+	}
+
+	void train(const TrainingSample& samples)
+	{
+		const int MaxIter = 10000;
+		const double TargetError = 0.01;
+
+		double err = std::numeric_limits<double>::max();
+		int iter = 0;
+
+		while (iter < MaxIter && err > TargetError) {
+			err = 0;
+
+			for (const auto& sample : samples) {
+				forward(sample.input);
+				err += error(sample.output);
+				backpropagate(sample.output);
+			}
+			++iter;
+			if (iter % 100 == 0) std::cout << "#" << iter << " error=" << err << std::endl;
+		}
 	}
 
 	constexpr void forward(Input in)
