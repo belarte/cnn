@@ -39,3 +39,6 @@ compile_commands.json
 
 # Tags
 tags
+
+# Vim temporaries
+*.swp
