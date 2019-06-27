@@ -97,18 +97,18 @@ public:
 
 	struct Parameters
 	{
-		const double rate;
+		const double LearningRate;
 	};
 
 	Network(RandomGenerator<double> gen, Parameters params)
-		: m_learningRate{ params.rate }
+		: m_params{ params }
 		, m_weightLayers{ typename InnerTopology::WeightsGen{ gen }.value }
 		, m_biasLayers{ typename InnerTopology::BiasesGen{ gen }.value }
 	{
 	}
 
 	constexpr Network(WeightLayers&& l, BiasLayers&& b, Parameters params)
-		: m_learningRate{ params.rate }
+		: m_params{ params }
 		, m_weightLayers{ l }
 		, m_biasLayers{ b }
 	{
@@ -175,15 +175,15 @@ private:
 	{
 		std::get<I + 1>(m_aggregatedLayers).apply(&Activation::fp);
 		auto error = multiply(std::get<I + 1>(m_errorLayers), std::get<I + 1>(m_aggregatedLayers));
-		auto delta = m_learningRate * std::get<I>(m_neuronLayers).transpose() * error;
+		auto delta = m_params.LearningRate * std::get<I>(m_neuronLayers).transpose() * error;
 
 		std::get<I>(m_errorLayers) = error * std::get<I>(m_weightLayers).transpose();
 		std::get<I>(m_weightLayers) += delta;
-		std::get<I>(m_biasLayers) += m_learningRate * error;
+		std::get<I>(m_biasLayers) += m_params.LearningRate * error;
 	}
 
 	constexpr static size_t IndexOfLastLayer = std::tuple_size<NeuronLayers>::value - 1;
-	const double m_learningRate;
+	const Parameters m_params;
 
 	NeuronLayers m_neuronLayers;
 	NeuronLayers m_aggregatedLayers;
