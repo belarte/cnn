@@ -95,17 +95,22 @@ public:
 	using Input = typename InnerTopology::Input;
 	using Output = typename InnerTopology::Output;
 
-	Network(RandomGenerator<double> gen, double rate)
-		: m_learningRate{ rate }
+	struct Parameters
+	{
+		const double rate;
+	};
+
+	Network(RandomGenerator<double> gen, Parameters params)
+		: m_learningRate{ params.rate }
 		, m_weightLayers{ typename InnerTopology::WeightsGen{ gen }.value }
 		, m_biasLayers{ typename InnerTopology::BiasesGen{ gen }.value }
 	{
 	}
 
-	constexpr Network(WeightLayers&& l, BiasLayers&& b, double rate)
-		: m_learningRate{rate}
-		, m_weightLayers{l}
-		, m_biasLayers{b}
+	constexpr Network(WeightLayers&& l, BiasLayers&& b, Parameters params)
+		: m_learningRate{ params.rate }
+		, m_weightLayers{ l }
+		, m_biasLayers{ b }
 	{
 	}
 
