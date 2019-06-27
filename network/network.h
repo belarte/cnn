@@ -110,15 +110,13 @@ public:
 		: m_params{ params }
 		, m_weightLayers{ typename InnerTopology::WeightsGen{ gen }.value }
 		, m_biasLayers{ typename InnerTopology::BiasesGen{ gen }.value }
-	{
-	}
+	{}
 
 	constexpr Network(WeightLayers&& l, BiasLayers&& b, Parameters params)
 		: m_params{ params }
 		, m_weightLayers{ l }
 		, m_biasLayers{ b }
-	{
-	}
+	{}
 
 	void train(const TrainingSample& samples)
 	{
@@ -136,6 +134,8 @@ public:
 			++iter;
 			if (iter % 100 == 0) std::cout << "#" << iter << " error=" << err << std::endl;
 		}
+
+		std::cout << "Result => " << iter << " iterations completed, final error is " << err << std::endl;
 	}
 
 	constexpr void forward(Input in)
@@ -155,7 +155,7 @@ public:
 
 	constexpr Output output() const
 	{
-		Output out{0};
+		Output out{};
 		for (size_t i=0; i<out.size(); ++i) {
 			out[i] = std::get<IndexOfLastLayer>(m_neuronLayers)(i, 0);
 		}
