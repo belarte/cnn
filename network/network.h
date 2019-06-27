@@ -95,10 +95,6 @@ public:
 	using Input = typename InnerTopology::Input;
 	using Output = typename InnerTopology::Output;
 
-	constexpr Network()
-	{
-	}
-
 	Network(RandomGenerator<double> gen, double rate)
 		: m_learningRate{ rate }
 		, m_weightLayers{ typename InnerTopology::WeightsGen{ gen }.value }
