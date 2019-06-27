@@ -7,7 +7,7 @@ int main(int, char**)
 
 	RandomGenerator gen(-1.0, 1.0);
 
-	auto n = Net{ gen, Net::Parameters{ 0.1, 0.01, 10000, } };
+	auto n = Net{ gen, Net::Parameters{ 0.1, 0.01, 10000 } };
 
 	auto s = Samples{
 		{{0, 0}, {0}},
