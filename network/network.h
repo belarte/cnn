@@ -30,9 +30,7 @@ struct Weights<A, B>
 	using matrix_type = Matrix<B, A, double>;
 	using type = std::tuple<matrix_type>;
 
-	Weights()
-		: value{ type{} }
-	{}
+	Weights() {}
 
 	Weights(RandomGenerator<double>& gen)
 		: value{ std::make_tuple(matrix_type{ gen }) }
@@ -46,9 +44,7 @@ struct Biases
 {
 	using type = std::tuple<Matrix<Args, 1, double>...>;
 
-	Biases()
-		: value{ type{} }
-	{}
+	Biases() {}
 
 	Biases(RandomGenerator<double> gen)
 		: value{ std::make_tuple(Matrix<Args, 1, double>{ gen }...) }
