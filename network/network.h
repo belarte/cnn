@@ -1,7 +1,7 @@
 #pragma once
 
-#include "matrices/matrices.h"
 #include "math/functions.h"
+#include "matrices/matrices.h"
 
 #include <tuple>
 
