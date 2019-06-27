@@ -63,7 +63,7 @@ TEST(Network, backpropagation_corrects_weights_and_biases)
 
 	Matrix<4, 3, double> l1{ {{ {1, 3, 1, 6}, {2, 1, 5, 1}, {1, 4, 1, 7} }} };
 	Matrix<2, 4, double> l2{ {{ {0, 1}, {1, 2}, {2, 0}, {0, 1} }} };
-	auto n = Net{ std::make_tuple(l1, l2), {}, Net::Parameters{ 0.5 } };
+	auto n = Net{ std::make_tuple(l1, l2), {}, Net::Parameters{ 0.5, 0, 0 } };
 
 	std::array<double, 3> input{1, 0, 1};
 	Net::Output trainingOutput{0, 30};

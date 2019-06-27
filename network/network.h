@@ -98,6 +98,8 @@ public:
 	struct Parameters
 	{
 		const double LearningRate;
+		const double TargetError;
+		const uint32_t MaxEpoch;
 	};
 
 	struct Sample
@@ -124,13 +126,10 @@ public:
 
 	void train(const TrainingSample& samples)
 	{
-		const int MaxIter = 10000;
-		const double TargetError = 0.01;
-
 		double err = std::numeric_limits<double>::max();
-		int iter = 0;
+		uint32_t iter = 0;
 
-		while (iter < MaxIter && err > TargetError) {
+		while (iter < m_params.MaxEpoch && err > m_params.TargetError) {
 			err = 0;
 
 			for (const auto& sample : samples) {
