@@ -118,14 +118,14 @@ constexpr std::ostream& operator<<(std::ostream& os, const std::array<T, S>& a)
 		os << a[i] << ", ";
 	}
 	os << "]";
-   return os;
+	return os;
 }
 
 template<size_t C, size_t R, typename T>
 constexpr std::ostream& operator<<(std::ostream& os, const Matrix<C, R, T>& m)
 {
-   os << m.to_string();
-   return os;
+	os << m.to_string();
+	return os;
 }
 
 template<size_t C, size_t R, typename T>
